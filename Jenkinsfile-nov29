@@ -7,7 +7,7 @@ pipeline{
     stage('Clone Repository'){
       steps{
         sh "echo 'cloning the latest application version' "
-        git branch: 'terry', url: 'https://github.com/Lion-Technology-Solutions/liontech-online-library-web-app.git'
+        git 'https://github.com/bright-liontech/liontech-online-library-web-app.git'
       }
     }
     stage('Test and Build'){
