@@ -4,33 +4,38 @@ pipeline{
     maven "maven3.9.8"
   }  
   stages {
-    stage('clone from github'){
+    stage('Clone Repository'){
       steps{
         sh "echo 'cloning the latest application version' "
-        git branch: 'nov29', url: 'https://github.com/Lion-Technology-Solutions/liontech-liontech-library-web-app.git'
+        git branch: 'terry', url: 'https://github.com/Lion-Technology-Solutions/liontech-online-library-web-app.git'
       }
     }
-    stage('3Test+Build'){
+    stage('Test and Build'){
       steps{
         sh "echo 'running JUnit-test-cases' "
         sh "echo 'testing must passed to create artifacts ' "
         sh "mvn clean package"
       }
+      post {
+        success {
+          archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+        }
+      }
     }
-    stage('4CodeQuality'){       
+    stage('Code Quality'){       
       steps{
         sh "echo 'Perfoming CodeQualityAnalysis' "
         sh "mvn sonar:sonar"
       }
     }
-    stage('5uploadNexus'){
+    stage('Upload to Nexus'){
       steps{
         sh "mvn deploy"
       }
     } 
-    stage('8deploy2prod'){
+    stage('Deploy to Production'){
       steps{
-        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'TOMCAT-DEPLOYER', path: '', url: 'http://35.182.68.230:8009/')], contextPath: 'nov29', war: 'target/*war'
+        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'TOMCAT-DEPLOYER', path: '', url: 'http://35.182.68.230:8009/')], contextPath: 'nov29', war: 'target/*.war'
       }
     }
 }
@@ -41,7 +46,7 @@ Please check build status.
 
 Thanks
 LionTech 
-+1 437 215 2483''', recipientProviders: [buildUser(), developers()], subject: 'success', to: 'paypal-team@gmail.com'
++1 437 215 2483''', recipientProviders: [buildUser(), developers()], subject: 'Build Status Update', to: 'paypal-team@gmail.com'
     }
     success{
       emailext body: '''Hey guys
@@ -57,7 +62,7 @@ Build failed. Please resolve issues.
 
 Thanks
 LionTech 
-+1 437 215 2483''', recipientProviders: [buildUser(), developers()], subject: 'success', to: 'paypal-team@gmail.com'
++1 437 215 2483''', recipientProviders: [buildUser(), developers()], subject: 'Build Failed', to: 'paypal-team@gmail.com'
     }
   } 
 }
