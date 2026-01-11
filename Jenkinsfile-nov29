@@ -35,7 +35,7 @@ pipeline{
     } 
     stage('Deploy to Production'){
       steps{
-        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'TOMCAT-DEPLOYER', path: '', url: 'http://35.182.68.230:8009/')], contextPath: 'nov29', war: 'target/*.war'
+        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'nov29', path: '', url: 'http://35.183.115.220:8009/')], contextPath: '\'nov29\'', war: 'target/*.war'
       }
     }
 }
